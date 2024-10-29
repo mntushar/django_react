@@ -1,55 +1,46 @@
 import { Fragment } from "react";
-import React from "react";
 import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
-class LeadList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      loaded: false,
-      placeholder: "Loading",
-    };
-  }
 
-  componentDidMount() {
+const LeadList = () => {
+  const [data, setData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [placeholder, setPlaceholder] = useState("Loading");
+
+  useEffect(() => {
     fetch("api/lead")
       .then((response) => {
         if (response.status > 400) {
-          return this.setState(() => {
-            return { placeholder: "Something went wrong!" };
-          });
+          setPlaceholder("Something went wrong!");
+          return;
         }
         return response.json();
       })
       .then((data) => {
-        this.setState(() => {
-          return {
-            data,
-            loaded: true,
-          };
-        });
+        setData(data);
+        setLoaded(true);
       });
-  }
+  }, []);
 
-  render() {
-    return (
-      <Fragment>
-        <Link to="/create">
-          <button>Create New Lead</button>
-        </Link>
+  return (
+    <Fragment>
+      <Link to="/create">
+        <button>Create New Lead</button>
+      </Link>
+      {!loaded ? (
+        <p>{placeholder}</p>
+      ) : (
         <ul>
-          {this.state.data.map((contact) => {
-            return (
-              <li key={contact.id}>
-                {contact.name} - {contact.email}
-              </li>
-            );
-          })}
+          {data.map((contact) => (
+            <li key={contact.id}>
+              {contact.name} - {contact.email}
+            </li>
+          ))}
         </ul>
-      </Fragment>
-    );
-  }
-}
+      )}
+    </Fragment>
+  );
+};
 
 export default LeadList;

@@ -202,3 +202,4 @@ build/
 
 # db
 django_react/db.sqlite3
+!/django_react/db.sqlite3
