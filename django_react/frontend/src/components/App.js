@@ -1,14 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import 'milligram/dist/milligram.css'
-import LeadList from "./leadList";
-import CreateLead from "./createLead";
-import NotFound from "./NotFound";
+import LeadList from "./Lead/LeadList";
+import CreateLead from "./Lead/CreateLead";
+import NotFound from "../Shared/NotFound";
 
 const App = () => {
   const navigate = useNavigate();
   const hasNavigatedRef = useRef(false);
+  const [isCheckingUrl, setIsCheckingUrl] = useState(true);
 
   useEffect(() => {
     const reloadUrl = document.getElementById("reloadUrl")?.value;
@@ -17,7 +18,15 @@ const App = () => {
       hasNavigatedRef.current = true;
       navigate(reloadUrl, { replace: true });
     }
+
+    // Mark URL checking as complete
+    setIsCheckingUrl(false);
   }, [navigate]);
+
+  // Render null while checking the URL
+  if (isCheckingUrl) {
+    return null;
+  }
 
   return (
     <Routes>
