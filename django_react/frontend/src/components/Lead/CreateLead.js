@@ -1,5 +1,6 @@
 import React, {Fragment} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import logo from '../../../Public/Images/test.png';
 
 
 const CreateLead = () => {
@@ -45,9 +46,12 @@ const CreateLead = () => {
 
     return (
         <Fragment>
+            <img src={logo} alt="Logo" style={{ width: '100px', height: '100px' }} />;
+
             <Link to="/">
                 <button>List</button>
             </Link>
+
             <form onSubmit={handleSubmit}>
                 <label>
                     Enter your name:
