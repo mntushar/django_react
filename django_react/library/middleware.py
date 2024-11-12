@@ -7,18 +7,19 @@ import re
 class CheckURLMiddleware(MiddlewareMixin):
     @staticmethod
     def process_request(request):
-        restricted_url = '/api/'
-        home_url = reverse('home')
-        file_pattern = re.compile(r"\.\w+$")
+        restricted_urls = ['/api/', '/admin']
+        file_pattern = re.compile(r"\.\w+$")  # Regex to check for file extensions
 
-        if not request.path.startswith(restricted_url) and not file_pattern.search(request.path):
-            if request.session.get('redirected'):
-                request.session['redirected'] = False
-                request.session['redirected_url'] = request.path
-                return HttpResponseRedirect(home_url)
-            else:
-                request.session['redirected'] = True
-            return None
+        # Use map() to check if request.path starts with any restricted URL
+        is_restricted = any(map(request.path.startswith, restricted_urls))
+
+        # If the path is not restricted and does not match a file pattern
+        if not is_restricted and not file_pattern.search(request.path):
+            # Render the HomeView
+            view = HomeView.as_view()
+            response = view(request)
+            response.render()
+            return response
 
         return None
 
