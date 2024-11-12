@@ -7,6 +7,5 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if 'redirected_url' in self.request.session:
-            context['reload_url'] = self.request.session['redirected_url']
+        context['reload_url'] = self.request.path
         return context
